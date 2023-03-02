@@ -86,6 +86,58 @@ class ContainerStack:
         else:
             return self.containers.pop()
 
+
+class Crane:
+    pass
+
+
+class AutomaticStackingCrane(Crane):
+    pass
+
+
+class AutomaticStackingCraneManagementMatrix:
+    pass
+
+
+class Cassettes:
+    pass
+
+
+class TrainLoadingCrane(Crane):
+    pass
+
+
+class TransLifters:
+    pass
+
+
+class StraddleCarriers:
+    pass
+
+
+class BoatLoadingCrane(Crane):
+    pass
+
+
+class FreightTrain:
+    pass
+
+
+class RailwayTerminals:
+    pass
+
+
+class Berth:
+    pass
+
+
+class ConatainerShip:
+    pass
+
+
+class Tugboats:
+
+
 """
 specific stacks for temperature controlled cargo
 
