@@ -85,3 +85,13 @@ class ContainerStack:
             raise ContainerStackEmpty()
         else:
             return self.containers.pop()
+
+"""
+specific stacks for temperature controlled cargo
+
+some containers come by rail - moved by translifters on stands called cassettes
+    specialised cranes move containers from rails to cassettes.
+    translifters move cassettes to the AutomaticStackingCrane
+
+straddle-carriers carry boxes to stacks
+"""
