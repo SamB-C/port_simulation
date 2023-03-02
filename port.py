@@ -88,54 +88,67 @@ class ContainerStack:
 
 
 class Crane:
+    """Base class for all cranes - to do with coupling and decoupling"""
     pass
 
 
 class AutomaticStackingCrane(Crane):
+    """Moving crane that moves containers that are currently being unloaded or loaded onto the ContainerShip"""
     pass
 
 
 class AutomaticStackingCraneManagementMatrix:
+    """The area of stacks looked after by 2 AutomaticStackingCranes"""
     pass
 
 
 class Cassettes:
+    """Hold containers whilst they are being moved by TransLifters"""
     pass
 
 
 class TrainLoadingCrane(Crane):
+    """Load and unload FrieghtTrains"""
     pass
 
 
 class TransLifters:
+    """Just move cassettes"""
     pass
 
 
 class StraddleCarriers:
+    """Move containers between AutomaticStackingCraneManagementMatrix and BoatLoadingCrane"""
     pass
 
 
 class BoatLoadingCrane(Crane):
+    """Load and unload ships"""
     pass
 
 
 class FreightTrain:
+    """Moves containers in and out of the port"""
     pass
 
 
 class RailwayTerminals:
+    """Where FreightTrains stay to be loaded"""
     pass
 
 
 class Berth:
+    """Where ContainerShips dock to be loaded"""
     pass
 
 
 class ConatainerShip:
+    """Ships that transport continers"""
     pass
 
 
 class Tugboats:
+    """2 tugboats are required to be free for a ship to dock"""
 
 
 """
