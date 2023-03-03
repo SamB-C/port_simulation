@@ -1,4 +1,3 @@
-from typing import Union
 from dataclasses import dataclass
 
 
@@ -55,7 +54,7 @@ class ContainerSize:
         else:
             if length not in ContainerSize.lengths:
                 raise InvalidSizeException(length)
-        self.length: Union(float, int) = length
+        self.length: float = length
 
 
 class Container:
@@ -86,7 +85,7 @@ def create_container(content, size='long'):
 class ContainerStack:
     def __init__(self, max_height=10):
         self.layers = [[None]]
-        self.top: Union(list[Container], list[None]) = self.layers[0]
+        self.top: list[Container] = self.layers[0]
         self.max_height = max_height
 
     @property
