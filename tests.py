@@ -67,6 +67,14 @@ class TestContainer(unittest.TestCase):
         with self.assertRaises(TypeError):
             Container(10, '')
 
+    def test_get_is_short(self):
+        container = create_container('', 'short')
+        self.assertTrue(container.is_short)
+
+    def test_get_is_short_false(self):
+        container = create_container('')
+        self.assertFalse(container.is_short)
+
 
 class TestContainerStack(unittest.TestCase):
 
