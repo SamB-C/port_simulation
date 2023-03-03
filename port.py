@@ -9,8 +9,8 @@ class InvalidSizeException(Exception):
 
 
 class ConatinerSizeConflict(Exception):
-    def __init__(self, incorrectSize: float, correctSize: float):
-        message = f'{incorrectSize}m doesn\'t match the size {correctSize}m'
+    def __init__(self):
+        message = f'Can\'t stack container size 6.06m on one container sized 2.59m'
         super().__init__(message)
 
 
@@ -66,26 +66,43 @@ def create_container(content, size='long'):
 
 
 class ContainerStack:
-    def __init__(self, length: float, max_height=10):
-        self.top: Union(Container, None) = None
-        self.container_size: ContainerSize = ContainerSize(length)
-        self.containers = [None]
+    def __init__(self, max_height=10):
+        self.layers = [[None]]
+        self.top: Union(list[Container], list[None]) = self.layers[0]
         self.max_height = max_height
 
+    @property
+    def stack_full(self) -> bool:
+        if len(self.layers) == self.max_height + 1 and self.top_layer_full:
+            return True
+        return False
+
+    @property
+    def max_height_reached(self) -> bool:
+        return len(self.layers) == self.max_height + 1
+
+    @property
+    def top_layer_full(self) -> bool:
+        top: list[Container] = self.top
+        if top[0] == None:
+            return True
+        one_container_in_top = len(top) == 1
+        top_layer_consists_of_short_containers = top[0].is_short
+        return not (one_container_in_top and top_layer_consists_of_short_containers)
+
     def add_conatiner(self, container: Container) -> None:
-        if len(self.containers) == self.max_height + 1:
+        if self.stack_full:
             raise ContainerStackTooTall()
-        if container.container_size.length != self.container_size.length:
-            raise ConatinerSizeConflict(
-                container.container_size.length, self.container_size.length)
-        self.containers.append(container)
-        self.top = container
+        if (not self.top_layer_full) and (not container.is_short):
+            raise ConatinerSizeConflict()
+        elif (not self.top_layer_full) and container.is_short:
+            self.top.append(container)
+        else:
+            self.layers.append([container])
+            self.top = self.layers[-1]
 
     def remove_container(self) -> Container:
-        if self.top == None:
-            raise ContainerStackEmpty()
-        else:
-            return self.containers.pop()
+        pass
 
 
 class Crane:
