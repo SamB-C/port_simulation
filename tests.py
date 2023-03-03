@@ -25,6 +25,20 @@ class TestContainerFactory(unittest.TestCase):
         with self.assertRaises(TypeError):
             create_container(None, True)
 
+    def test_id(self):
+        initial_id = Container.id
+        container1 = Container(6.06, None)
+        self.assertEqual(container1.id, initial_id)
+        container2 = Container(6.06, None)
+        self.assertEqual(container2.id, initial_id + 1)
+
+    def test_repr(self):
+        current_id = Container.id
+        container = Container(6.06, None)
+        expected = f'Container id: {current_id}'
+        actual = container.__repr__()
+        self.assertEqual(expected, actual)
+
 
 class TestContainer(unittest.TestCase):
 

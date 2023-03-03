@@ -59,13 +59,17 @@ class ContainerSize:
 
 
 class Container:
+    id = 1
+
     def __init__(self, length: float, contents: any):
         self.container_size: ContainerSize = ContainerSize(length)
         self.contents: any = contents
         self.is_short = self.container_size.length == ContainerSize.lengths[0]
+        self.id = Container.id
+        Container.id += 1
 
     def __repr__(self):
-        return f'Container -> length: {self.container_size.length}, contents: {self.contents}'
+        return f'Container id: {self.id}'
 
 
 def create_container(content, size='long'):
