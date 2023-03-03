@@ -111,15 +111,15 @@ class ContainerStack:
             return True
         return False
 
-    def add_container(self, container: Container) -> None:
+    def add_container(self, container: list[Container]) -> None:
         if self.stack_full:
             raise ContainerStackTooTall()
-        if (not self.top_layer_full) and (not container.is_short):
+        if (not self.top_layer_full) and (not container[0].is_short):
             raise ConatinerSizeConflict()
-        elif (not self.top_layer_full) and container.is_short:
-            self.top.append(container)
+        elif (not self.top_layer_full) and container[0].is_short:
+            self.top.append(*container)
         else:
-            self.layers.append([container])
+            self.layers.append(container)
             self.top = self.layers[-1]
 
     def remove_container(self, remove_pair=False) -> list[Container]:
