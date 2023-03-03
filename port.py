@@ -31,6 +31,20 @@ class ContainerStackEmpty(Exception):
         super().__init__('Container cannot be removed as container stack is empty')
 
 
+class LayerHalfFull(Exception):
+    """When trying to remove a pair of short containers, but there is only one short container to remove"""
+
+    def __init__(self):
+        super().__init__('There is only one container on this layer.')
+
+
+class PairExpected(Exception):
+    """When trying to remove a pair of short containers, but the layer is just a long container"""
+
+    def __init__(self):
+        super().__init__('The top layer is 1 long container when expecting 2 short containers.')
+
+
 @dataclass
 class ContainerSize:
     lengths = [2.59, 6.06]
@@ -91,6 +105,12 @@ class ContainerStack:
         return not (one_container_in_top and top_layer_consists_of_short_containers)
 
     def add_conatiner(self, container: Container) -> None:
+    @property
+    def is_empty(self):
+        if self.top == [None]:
+            return True
+        return False
+
         if self.stack_full:
             raise ContainerStackTooTall()
         if (not self.top_layer_full) and (not container.is_short):
@@ -101,8 +121,16 @@ class ContainerStack:
             self.layers.append([container])
             self.top = self.layers[-1]
 
-    def remove_container(self) -> Container:
-        pass
+    def remove_container(self, remove_pair=False) -> list[Container]:
+        if self.is_empty:
+            raise ContainerStackEmpty()
+        elif remove_pair and not self.top_layer_full:
+            raise LayerHalfFull()
+        elif remove_pair and len(self.top) == 1:
+            raise PairExpected()
+        to_remove = self.layers.pop()
+        self.top = self.layers[-1]
+        return to_remove
 
 
 class Crane:

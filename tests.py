@@ -1,5 +1,5 @@
 import unittest
-from port import Container, InvalidSizeException, ContainerStack, ConatinerSizeConflict, ContainerStackTooTall, create_container, InvalidContainerSizeExpression, ContainerStackEmpty
+from port import Container, InvalidSizeException, ContainerStack, ConatinerSizeConflict, ContainerStackTooTall, create_container, InvalidContainerSizeExpression, ContainerStackEmpty, LayerHalfFull, PairExpected
 
 
 class TestContainerFactory(unittest.TestCase):
@@ -118,11 +118,56 @@ class TestContainerStack(unittest.TestCase):
         self.assertListEqual(container_stack.layers, [
                              [None], short_containers, [long_container]])
 
-    @unittest.skip('Feature not yet implemented')
+    def test_is_empty_property_true(self):
+        container_stack = ContainerStack()
+        self.assertTrue(container_stack.is_empty)
+
+    def test_is_empty_propery_false(self):
+        container_stack = ContainerStack()
+        container_stack.add_conatiner(create_container(None))
+        self.assertFalse(container_stack.is_empty)
+
     def test_remove_from_empty_stack(self):
         containerStack = ContainerStack()
         with self.assertRaises(ContainerStackEmpty):
             containerStack.remove_container()
+
+    def test_remove_pair_when_layer_half_full(self):
+        container_stack = ContainerStack()
+        container_stack.add_conatiner(create_container(None, 'short'))
+        with self.assertRaises(LayerHalfFull):
+            container_stack.remove_container(remove_pair=True)
+
+    def test_remove_pair_when_top_is_long(self):
+        container_stack = ContainerStack()
+        container_stack.add_conatiner(create_container(None))
+        with self.assertRaises(PairExpected):
+            container_stack.remove_container(remove_pair=True)
+
+    def test_remove_single_long_container(self):
+        container_stack = ContainerStack()
+        container = create_container(None)
+        container_stack.add_conatiner(container)
+        removed_container = container_stack.remove_container()
+        self.assertListEqual(container_stack.layers, [[None]])
+        self.assertEqual(container, *removed_container)
+
+    def test_remove_single_short_container(self):
+        container_stack = ContainerStack()
+        container = create_container(None, 'short')
+        container_stack.add_conatiner(container)
+        removed_container = container_stack.remove_container()
+        self.assertListEqual(container_stack.layers, [[None]])
+        self.assertEqual(container, *removed_container)
+
+    def test_remove_pair(self):
+        container_stack = ContainerStack()
+        containers = [create_container(None, 'short') for i in range(2)]
+        for container in containers:
+            container_stack.add_conatiner(container)
+        removed_pair = container_stack.remove_container(remove_pair=True)
+        self.assertListEqual(container_stack.layers, [[None]])
+        self.assertListEqual(removed_pair, containers)
 
 
 unittest.main()
