@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 
 
 class InvalidSizeException(Exception):
@@ -44,7 +43,6 @@ class PairExpected(Exception):
         super().__init__('The top layer is 1 long container when expecting 2 short containers.')
 
 
-@dataclass
 class ContainerSize:
     lengths = [2.59, 6.06]
 
