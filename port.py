@@ -124,10 +124,15 @@ class ContainerStack:
     def remove_container(self, remove_pair=False) -> list[Container]:
         if self.is_empty:
             raise ContainerStackEmpty()
-        elif remove_pair and not self.top_layer_full:
-            raise LayerHalfFull()
-        elif remove_pair and len(self.top) == 1:
-            raise PairExpected()
+        elif remove_pair:
+            if not self.top_layer_full:
+                raise LayerHalfFull()
+            elif len(self.top) == 1:
+                raise PairExpected()
+        elif not remove_pair:
+            if self.top[0].is_short and len(self.top) != 1:
+                removed_value = self.top.pop()
+                return [removed_value]
         to_remove = self.layers.pop()
         self.top = self.layers[-1]
         return to_remove

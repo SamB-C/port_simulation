@@ -169,5 +169,14 @@ class TestContainerStack(unittest.TestCase):
         self.assertListEqual(container_stack.layers, [[None]])
         self.assertListEqual(removed_pair, containers)
 
+    def test_remove_one_of_pair(self):
+        container_stack = ContainerStack()
+        containers = [create_container(None, 'short') for i in range(2)]
+        for container in containers:
+            container_stack.add_container(container)
+        remove_single = container_stack.remove_container()
+        self.assertEqual(*remove_single, containers[1])
+        self.assertListEqual(container_stack.layers, [[None], [containers[0]]])
+
 
 unittest.main()
