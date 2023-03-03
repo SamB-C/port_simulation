@@ -91,30 +91,30 @@ class TestContainerStack(unittest.TestCase):
     def test_add_invalid_sized_container(self):
         with self.assertRaises(ConatinerSizeConflict):
             containerStack = ContainerStack()
-            containerStack.add_conatiner(create_container(None, 'short'))
+            containerStack.add_container(create_container(None, 'short'))
             container = Container(6.06, None)
-            containerStack.add_conatiner(container)
+            containerStack.add_container(container)
 
     def test_add_valid_container(self):
         containerStack = ContainerStack()
         container = Container(2.59, None)
-        containerStack.add_conatiner(container)
+        containerStack.add_container(container)
         self.assertListEqual(containerStack.layers, [[None], [container]])
 
     def test_add_too_many_containers(self):
         containerStack = ContainerStack(2)
-        containerStack.add_conatiner(create_container(None))
-        containerStack.add_conatiner(create_container(None))
+        containerStack.add_container(create_container(None))
+        containerStack.add_container(create_container(None))
         with self.assertRaises(ContainerStackTooTall):
-            containerStack.add_conatiner(create_container(None))
+            containerStack.add_container(create_container(None))
 
     def test_add_2_short_1_long(self):
         container_stack = ContainerStack()
         short_containers = [create_container(None, 'short') for i in range(2)]
         for short_container in short_containers:
-            container_stack.add_conatiner(short_container)
+            container_stack.add_container(short_container)
         long_container = create_container(None)
-        container_stack.add_conatiner(long_container)
+        container_stack.add_container(long_container)
         self.assertListEqual(container_stack.layers, [
                              [None], short_containers, [long_container]])
 
@@ -124,7 +124,7 @@ class TestContainerStack(unittest.TestCase):
 
     def test_is_empty_propery_false(self):
         container_stack = ContainerStack()
-        container_stack.add_conatiner(create_container(None))
+        container_stack.add_container(create_container(None))
         self.assertFalse(container_stack.is_empty)
 
     def test_remove_from_empty_stack(self):
@@ -134,20 +134,20 @@ class TestContainerStack(unittest.TestCase):
 
     def test_remove_pair_when_layer_half_full(self):
         container_stack = ContainerStack()
-        container_stack.add_conatiner(create_container(None, 'short'))
+        container_stack.add_container(create_container(None, 'short'))
         with self.assertRaises(LayerHalfFull):
             container_stack.remove_container(remove_pair=True)
 
     def test_remove_pair_when_top_is_long(self):
         container_stack = ContainerStack()
-        container_stack.add_conatiner(create_container(None))
+        container_stack.add_container(create_container(None))
         with self.assertRaises(PairExpected):
             container_stack.remove_container(remove_pair=True)
 
     def test_remove_single_long_container(self):
         container_stack = ContainerStack()
         container = create_container(None)
-        container_stack.add_conatiner(container)
+        container_stack.add_container(container)
         removed_container = container_stack.remove_container()
         self.assertListEqual(container_stack.layers, [[None]])
         self.assertEqual(container, *removed_container)
@@ -155,7 +155,7 @@ class TestContainerStack(unittest.TestCase):
     def test_remove_single_short_container(self):
         container_stack = ContainerStack()
         container = create_container(None, 'short')
-        container_stack.add_conatiner(container)
+        container_stack.add_container(container)
         removed_container = container_stack.remove_container()
         self.assertListEqual(container_stack.layers, [[None]])
         self.assertEqual(container, *removed_container)
@@ -164,7 +164,7 @@ class TestContainerStack(unittest.TestCase):
         container_stack = ContainerStack()
         containers = [create_container(None, 'short') for i in range(2)]
         for container in containers:
-            container_stack.add_conatiner(container)
+            container_stack.add_container(container)
         removed_pair = container_stack.remove_container(remove_pair=True)
         self.assertListEqual(container_stack.layers, [[None]])
         self.assertListEqual(removed_pair, containers)

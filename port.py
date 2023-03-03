@@ -104,13 +104,13 @@ class ContainerStack:
         top_layer_consists_of_short_containers = top[0].is_short
         return not (one_container_in_top and top_layer_consists_of_short_containers)
 
-    def add_conatiner(self, container: Container) -> None:
     @property
     def is_empty(self):
         if self.top == [None]:
             return True
         return False
 
+    def add_container(self, container: Container) -> None:
         if self.stack_full:
             raise ContainerStackTooTall()
         if (not self.top_layer_full) and (not container.is_short):
