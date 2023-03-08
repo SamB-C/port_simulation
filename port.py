@@ -48,6 +48,13 @@ class PairExpected(Exception):
         super().__init__('The top layer is 1 long container when expecting 2 short containers.')
 
 
+class LayerExpected(Exception):
+    """Raised when a layer is expected as an input, but a list is not recieved"""
+
+    def __init__(self):
+        super().__init__('A layer of containers was expected but a list was not given. Check if the argument passed in is a Container instead of a list of containers.')
+
+
 class ContainerSize:
     lengths = [2.59, 6.06]
 
@@ -116,15 +123,17 @@ class ContainerStack:
             return True
         return False
 
-    def add_container(self, container: list[Container]) -> None:
+    def add_container(self, layer: list[Container]) -> None:
+        if not type(layer) == list:
+            raise LayerExpected()
         if self.stack_full:
             raise ContainerStackTooTall()
-        if (not self.top_layer_full) and (not container[0].is_short):
+        if (not self.top_layer_full) and (not layer[0].is_short):
             raise ConatinerSizeConflict()
-        elif (not self.top_layer_full) and container[0].is_short:
-            self.top.append(*container)
+        elif (not self.top_layer_full) and layer[0].is_short:
+            self.top.append(*layer)
         else:
-            self.layers.append(container)
+            self.layers.append(layer)
             self.top = self.layers[-1]
 
     def remove_container(self, remove_pair=False) -> list[Container]:

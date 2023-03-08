@@ -1,6 +1,6 @@
 import unittest
 from port import Container, InvalidSizeException, ContainerStack, ConatinerSizeConflict, ContainerStackTooTall, create_container, InvalidContainerSizeExpression, ContainerStackEmpty, \
-    LayerHalfFull, PairExpected, Crane, COUPLING_TIME_MILLISECONDS, DECOUPLING_TIME_MILLISECONDS
+    LayerHalfFull, PairExpected, Crane, COUPLING_TIME_MILLISECONDS, DECOUPLING_TIME_MILLISECONDS, LayerExpected
 import time
 import asyncio
 
@@ -134,6 +134,12 @@ class TestContainerStack(unittest.TestCase):
         container_stack.add_container([long_container])
         self.assertListEqual(container_stack.layers, [
                              [None], short_containers, [long_container]])
+
+    def test_add_container_instead_of_layer(self):
+        with self.assertRaises(LayerExpected):
+            container_stack = ContainerStack()
+            valid_container = create_container(None)
+            container_stack.add_container(valid_container)
 
     def test_is_empty_property_true(self):
         container_stack = ContainerStack()
