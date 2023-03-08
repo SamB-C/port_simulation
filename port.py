@@ -1,3 +1,8 @@
+import asyncio
+
+
+COUPLING_TIME_MILLISECONDS = 100
+DECOUPLING_TIME_MILLISECONDS = 100
 
 
 class InvalidSizeException(Exception):
@@ -141,7 +146,23 @@ class ContainerStack:
 
 class Crane:
     """Base class for all cranes - to do with coupling and decoupling"""
-    pass
+
+    def __init__(self, lift_time=100, lower_time=100):
+        self.coupled_container = [None]
+        self.lift_time = lift_time
+        self.lower_time = lower_time
+
+    async def couple(self):
+        await asyncio.sleep(COUPLING_TIME_MILLISECONDS / 1000)
+
+    async def decouple(self):
+        await asyncio.sleep(DECOUPLING_TIME_MILLISECONDS / 1000)
+
+    async def lift(self):
+        await asyncio.sleep(self.lift_time / 1000)
+
+    async def lower(self):
+        await asyncio.sleep(self.lower_time / 1000)
 
 
 class AutomaticStackingCrane(Crane):

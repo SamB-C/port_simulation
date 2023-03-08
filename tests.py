@@ -1,5 +1,8 @@
 import unittest
-from port import Container, InvalidSizeException, ContainerStack, ConatinerSizeConflict, ContainerStackTooTall, create_container, InvalidContainerSizeExpression, ContainerStackEmpty, LayerHalfFull, PairExpected
+from port import Container, InvalidSizeException, ContainerStack, ConatinerSizeConflict, ContainerStackTooTall, create_container, InvalidContainerSizeExpression, ContainerStackEmpty, \
+    LayerHalfFull, PairExpected, Crane, COUPLING_TIME_MILLISECONDS, DECOUPLING_TIME_MILLISECONDS
+import time
+import asyncio
 
 
 class TestContainerFactory(unittest.TestCase):
@@ -191,6 +194,43 @@ class TestContainerStack(unittest.TestCase):
         remove_single = container_stack.remove_container()
         self.assertEqual(*remove_single, containers[1])
         self.assertListEqual(container_stack.layers, [[None], [containers[0]]])
+
+
+class TestCraneBaseClass(unittest.TestCase):
+    def test_couple_timing(self):
+        crane = Crane()
+        start = time.time()
+        asyncio.run(crane.couple())
+        end = time.time()
+        self.assertGreaterEqual(end - start, COUPLING_TIME_MILLISECONDS / 1000)
+
+    def test_decouple_timing(self):
+        crane = Crane()
+        start = time.time()
+        asyncio.run(crane.decouple())
+        end = time.time()
+        self.assertGreaterEqual(
+            end - start, DECOUPLING_TIME_MILLISECONDS / 1000)
+
+    def test_lift_timing(self):
+        crane = Crane()
+        tested_lift_time = 10
+        crane.lift_time = tested_lift_time
+        start = time.time()
+        asyncio.run(crane.lift())
+        end = time.time()
+        self.assertGreaterEqual(
+            end - start, tested_lift_time / 1000)
+
+    def test_lower_timing(self):
+        crane = Crane()
+        tested_lower_time = 10
+        crane.lower_time = tested_lower_time
+        start = time.time()
+        asyncio.run(crane.lower())
+        end = time.time()
+        self.assertGreaterEqual(
+            end - start, tested_lower_time / 1000)
 
 
 unittest.main()
