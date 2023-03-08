@@ -238,5 +238,35 @@ class TestCraneBaseClass(unittest.TestCase):
         self.assertGreaterEqual(
             end - start, tested_lower_time / 1000)
 
+    def test_pickup_container(self):
+        container = create_container(None)
+        stack = ContainerStack()
+        stack.add_container([container])
+        crane = Crane()
+        self.assertListEqual(crane.coupled_container, [None])
+        self.assertListEqual(stack.layers, [[None], [container]])
+        pickup_time = COUPLING_TIME_MILLISECONDS + crane.lift_time + crane.lower_time
+        start = time.time()
+        crane.pickup_container(stack)
+        end = time.time()
+        self.assertGreaterEqual(end - start, pickup_time / 1000)
+        self.assertListEqual(crane.coupled_container, [container])
+        self.assertListEqual(stack.layers, [[None]])
+
+    def test_put_down_container(self):
+        container = create_container(None)
+        stack = ContainerStack()
+        crane = Crane()
+        crane.coupled_container = [container]
+        self.assertListEqual(crane.coupled_container, [container])
+        self.assertListEqual(stack.layers, [[None]])
+        put_down_time = DECOUPLING_TIME_MILLISECONDS + crane.lift_time + crane.lower_time
+        start = time.time()
+        crane.put_down_container(stack)
+        end = time.time()
+        self.assertGreaterEqual(end - start, put_down_time / 1000)
+        self.assertListEqual(crane.coupled_container, [None])
+        self.assertListEqual(stack.layers, [[None], [container]])
+
 
 unittest.main()

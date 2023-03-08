@@ -173,6 +173,19 @@ class Crane:
     async def lower(self):
         await asyncio.sleep(self.lower_time / 1000)
 
+    def pickup_container(self, stack):
+        asyncio.run(self.lower())
+        asyncio.run(self.couple())
+        self.coupled_container = stack.remove_container()
+        asyncio.run(self.lift())
+
+    def put_down_container(self, stack: ContainerStack):
+        asyncio.run(self.lower())
+        asyncio.run(self.decouple())
+        stack.add_container(self.coupled_container)
+        self.coupled_container = [None]
+        asyncio.run(self.lift())
+
 
 class AutomaticStackingCrane(Crane):
     """Moving crane that moves containers that are currently being unloaded or loaded onto the ContainerShip"""
